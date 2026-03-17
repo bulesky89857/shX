@@ -5,4 +5,5 @@ sudo bash -c "$(curl -fsSL https://raw.githubusercontent.com/bulesky89857/shX/re
 ```
 
 
-<img width="1008" height="936" alt=" ssh12" src="https://github.com/user-attachments/assets/ba3ea06c-198e-4107-b238-20786584fdad" />
+<img width="1684" height="940" alt="image" src="https://github.com/user-attachments/assets/9adfa288-a8e6-405a-a599-996a9c44bef0" />
+
