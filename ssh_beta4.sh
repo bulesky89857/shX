@@ -184,7 +184,7 @@ function_create_keys() {
         echo -e "\n${ICON_WARN} ${BOLD}跳过PuTTY密钥转换（puttygen不可用）${RESET}"
     fi
     
-    # 7. 导入公钥到authorized_keys
+    # 7. 导入公钥到authorized_keys（修改点：添加文件名+时间注释，优化重复检查）
     echo -e "\n${ICON_INFO} ${BOLD}导入公钥到authorized_keys...${RESET}"
     AUTH_KEYS="$KEY_DIR/authorized_keys"
     
@@ -194,13 +194,17 @@ function_create_keys() {
         echo -e "  ${ICON_OK} 创建authorized_keys文件"
     fi
     
-    # 检查公钥是否已存在
-    PUB_KEY_CONTENT=$(cat "$KEY_PATH.pub")
-    if grep -q "$PUB_KEY_CONTENT" "$AUTH_KEYS" 2>/dev/null; then
+    # 提取公钥的密钥数据（base64部分）用于唯一性检查
+    PUB_KEY_DATA=$(awk '{print $2}' "$KEY_PATH.pub")
+    if grep -q "$PUB_KEY_DATA" "$AUTH_KEYS" 2>/dev/null; then
         echo -e "  ${ICON_WARN} 公钥已存在于authorized_keys中"
     else
-        cat "$KEY_PATH.pub" >> "$AUTH_KEYS"
-        echo -e "  ${ICON_OK} 公钥已添加到authorized_keys"
+        # 构建带有文件名和时间注释的公钥行
+        TIMESTAMP=$(date '+%Y-%m-%d %H:%M:%S')
+        COMMENT="${KEY_NAME} ${TIMESTAMP}"
+        # 在原有公钥内容后添加注释
+        echo "$(cat "$KEY_PATH.pub") ${COMMENT}" >> "$AUTH_KEYS"
+        echo -e "  ${ICON_OK} 公钥已添加到authorized_keys (注释: ${COMMENT})"
     fi
     
     # 8. 设置正确的权限
@@ -208,7 +212,7 @@ function_create_keys() {
     chmod 644 "$KEY_PATH.pub" 2>/dev/null
     chown -R "$(whoami):$(id -gn)" "$KEY_DIR" 2>/dev/null
     
-    # 9. 显示结果摘要 - 重新设计输出格式
+    # 9. 显示结果摘要（原样保留）
     echo -e "\n${BOLD}${CYAN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET}"
     echo -e "${BOLD}${WHITE}             密钥生成完成！             ${RESET}"
     echo -e "${BOLD}${CYAN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET}\n"
@@ -259,7 +263,7 @@ function_create_keys() {
     
     echo -e "\n${BOLD}${WHITE}公钥已导入:${RESET}"
     echo -e "  ${GREEN}${AUTH_KEYS}${RESET}"
-    echo -e "  ${YELLOW}（已启用此密钥的SSH免密登录）${RESET}"
+    echo -e "  ${YELLOW}（已启用此密钥的SSH免密登录，注释: ${COMMENT}）${RESET}"
     
     # 使用示例
     echo -e "\n${CYAN}────────────────────────────────────────${RESET}"
@@ -337,6 +341,7 @@ function_create_keys() {
     
     read -n 1 -s -r -p "按任意键继续..."
 }
+
 
 
 # 功能2: SSH安全配置
