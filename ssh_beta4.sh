@@ -556,6 +556,7 @@ done
 # 验证并应用配置
 echo -e "\n${ICON_INFO} ${BOLD}验证配置...${RESET}"
 if sshd -t 2>/dev/null; then
+    echo -e "  ${ICON_OK} ${GREEN}配置语法验证通过${RESET}"
   if [ "$has_changes" = true ] && [ $modified_count -gt 0 ]; then
     if systemctl reload sshd 2>/dev/null || systemctl restart sshd 2>/dev/null; then
         echo -e "\n${ICON_OK} ${BOLD}${GREEN}SSH配置已更新并重新加载${RESET}"
