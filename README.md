@@ -1,7 +1,7 @@
 # shX
 自用脚本,ai辅助修改
 ```sh
-sudo bash -c "$(curl -fsSL https://raw.githubusercontent.com/bulesky89857/shX/refs/heads/main/ssh.sh)"
+sudo bash -c "$(curl -fsSL [https://raw.githubusercontent.com/bulesky89857/shX/refs/heads/main/ssh.sh](https://github.com/bulesky89857/shX/raw/refs/heads/main/ssh_beta3.sh))"
 ```
 
 
